@@ -4,7 +4,7 @@ require './lib/tempestry_pattern'
 require 'sqlite3'
 
 DB = {:conn => SQLite3::Database.new('./db/colors.db')}
-DB2 = {:conn => SQLite3::Database.new('./db/scraped_data.db')}
+DB2 = {:conn => SQLite3::Database.new('./db/patterns.db')}
 
 # if TempestryPattern::Color.colors.empty?
 TempestryPattern::Color.all

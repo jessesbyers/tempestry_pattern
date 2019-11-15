@@ -31,12 +31,12 @@ class TempestryPattern::CLI
       puts "That does not appear to be a valid year. Check the preview, or enter new search terms."
       puts ""
     end
-    # puts ""
-    # puts "Enter your name"
-    # self.name = gets.strip
-    # puts ""
-    # puts "Enter a project description"
-    # self.description = gets.strip
+    puts ""
+    puts "Enter your name"
+    self.name = gets.strip
+    puts ""
+    puts "Enter a project description"
+    self.description = gets.strip
     @@all << self
   end
 
@@ -83,8 +83,8 @@ class TempestryPattern::CLI
           puts ""
           puts "Please wait while we PREVIEW your pattern"
           puts ""
-          TempestryPattern::Weather.preview
-          if TempestryPattern::Weather.preview_all[0].date == nil
+          TempestryPattern::Pattern.preview
+          if TempestryPattern::Pattern.preview_all[0].date == nil
             puts ""
             puts "  ERROR: Please try again. Weather history data is not available for the date and location you have selected."
             puts ""
@@ -106,7 +106,7 @@ class TempestryPattern::CLI
           puts ""
           puts "While you are waiting, learn more about the Tempestry Project by watching this video: https://youtu.be/30nG81Fu7yg"
           puts ""
-          TempestryPattern::Weather.year
+          TempestryPattern::Pattern.year
           print_year
           options3
 
@@ -154,11 +154,11 @@ class TempestryPattern::CLI
       get_search_terms
     else
       puts ""
-      puts "    Here is your daily maximum temperature data for #{TempestryPattern::Weather.preview_all[0].location_name}."
+      puts "    Here is your daily maximum temperature data for #{TempestryPattern::Pattern.preview_all[0].location_name}."
       puts ""
       puts "    Complete?  Row #    Date           Max Temperature    Yarn Color"
       puts ""
-      TempestryPattern::Weather.preview_all.each.with_index(1) do |day, i|
+      TempestryPattern::Pattern.preview_all.each.with_index(1) do |day, i|
         if day.max_temp.to_f.round.between?(0, 9)
           temp_spacer = "  "
         elsif day.max_temp.to_f.round.between?(10, 99) || day.max_temp.between?(-9, -1)
@@ -174,11 +174,11 @@ class TempestryPattern::CLI
 
   def print_year
     puts ""
-    puts "    Here is your complete knitting pattern for #{TempestryPattern::Weather.all[0].location_name}."
+    puts "    Here is your complete knitting pattern for #{TempestryPattern::Pattern.all[0].location_name}."
     puts ""
     puts "    Complete?  Row #    Date             Max Temperature    Yarn Color"
     puts ""
-    TempestryPattern::Weather.all.each.with_index(1) do |day, i|
+    TempestryPattern::Pattern.all.each.with_index(1) do |day, i|
       if TempestryPattern::Scraper.all == nil
         puts ""
         puts "  ERROR: Please try again. Weather history data is not available for the date and location you have selected."
