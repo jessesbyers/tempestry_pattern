@@ -3,7 +3,7 @@
 require './lib/tempestry_pattern'
 require 'sqlite3'
 
-DB = {:conn => SQLite3::Database.new('./lib/tempestry_pattern/colors.db')}
+DB = {:conn => SQLite3::Database.new('./db/colors.db')}
 
 TempestryPattern::Color.all
 
