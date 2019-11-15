@@ -1,7 +1,7 @@
 # Scraper class responsible for
 # #scraping data from website
-# #adding data to weather data table in db/weather.db
-# DOES NOT CREATE OBJECTS
+# #correcting / converting data
+# #adding corrected data to weather data table in db/patterns.db
 
 # Weather class responsible for
 # #reifying database rows into weather daily objects
@@ -43,7 +43,7 @@ class TempestryPattern::Scraper
       convert_temp
 
       @@all << self
-      TempestryPattern::Pattern.save(date, max_temp, temp_units, color_id, location, weather_station)
+      TempestryPattern::Pattern.save
     end
   end
 
@@ -57,7 +57,6 @@ class TempestryPattern::Scraper
 
   def get_color
     TempestryPattern::Color.all[0].each do |color_row|
-      binding.pry
       if self.max_temp.to_f.round >= color_row.min && self.max_temp.to_f.round <= color_row.max
         self.color = color_row.color
       end
