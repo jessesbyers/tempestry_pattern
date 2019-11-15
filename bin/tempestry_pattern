@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require './lib/tempestry_pattern'
+require 'sqlite3'
+
+DB = {:conn => SQLite3::Database.new('./lib/tempestry_pattern/colors.db')}
+
+TempestryPattern::Color.all
+
+TempestryPattern::CLI.new.call
+
+
+
+
+
+
+TempestryPattern::CLI.new.call
