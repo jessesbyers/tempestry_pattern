@@ -1,5 +1,5 @@
 class TempestryPattern::CLI
-  attr_accessor :year, :zip
+  attr_accessor :year, :zip, :name, :description
   @@all = []
 
   def call
@@ -31,6 +31,12 @@ class TempestryPattern::CLI
       puts "That does not appear to be a valid year. Check the preview, or enter new search terms."
       puts ""
     end
+    # puts ""
+    # puts "Enter your name"
+    # self.name = gets.strip
+    # puts ""
+    # puts "Enter a project description"
+    # self.description = gets.strip
     @@all << self
   end
 
