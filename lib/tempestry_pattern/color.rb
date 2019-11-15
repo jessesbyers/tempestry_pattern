@@ -1,5 +1,6 @@
 class TempestryPattern::Color
   attr_accessor :id, :color, :min, :max
+  @@color_objects = []
 
   def self.new_from_db(row)
     new_color = self.new
@@ -15,10 +16,13 @@ class TempestryPattern::Color
       SELECT *
         FROM colors
     SQL
-
     DB[:conn].execute(sql).map do |row|
-     self.new_from_db(row)
+     @@color_objects << self.new_from_db(row)
     end
+   end
+
+   def self.colors
+     @@color_objects
    end
   end
 

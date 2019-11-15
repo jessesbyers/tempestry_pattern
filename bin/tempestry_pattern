@@ -5,13 +5,8 @@ require 'sqlite3'
 
 DB = {:conn => SQLite3::Database.new('./db/colors.db')}
 
+# if TempestryPattern::Color.colors.empty?
 TempestryPattern::Color.all
-
-TempestryPattern::CLI.new.call
-
-
-
-
-
+# end
 
 TempestryPattern::CLI.new.call
