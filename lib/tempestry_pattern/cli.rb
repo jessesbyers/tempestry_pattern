@@ -120,7 +120,7 @@ class TempestryPattern::CLI
           options3
 
         when "R" || "r"
-          print_year
+          TempestryPattern::Pattern.find_by_search_terms(zip, year, name, description)
           options3
 
         when "EXIT" || "exit"
@@ -227,6 +227,24 @@ class TempestryPattern::CLI
   end
 end
 
+#   def self.save
+#     if self.find_by_search_terms(zip, year, name, description) == []
+#       TempestryPattern::Scraper.all.each do |day|
+#         sql = "INSERT INTO patterns (date, location_name, weather_station, max_temp, temp_units, color, zip, year, name, description)
+#           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+#         DB2[:conn].execute(sql, day.date, day.location_name, day.weather_station, day.max_temp, day.temp_units, day.color, day.zip, day.year, day.name, day.description)
+#         @id = DB2[:conn].execute("SELECT last_insert_rowid() FROM patterns")[0][0]
+#       end
+#     end
+#   end
+#
+#   def self.find_by_search_terms(zip, year, name, description)
+#     sql = "SELECT * FROM patterns WHERE zip = ? AND year = ? AND name = ? AND description = ?"
+#     pattern = DB2[:conn].execute(sql, zip, year, name, description)
+#     puts pattern
+#   end
+# end
+
 # def choose_day
 #   puts ""
 #   puts "Choose a row number to see full daily weather information for that day"
@@ -253,4 +271,3 @@ end
 #       puts ""
 #     end
 #   end
-# end
