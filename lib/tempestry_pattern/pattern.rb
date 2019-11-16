@@ -1,4 +1,3 @@
-# revise save method to check for duplicate entries before saving
 # create methods to view data already saved in Database
 # revise to be full year version (366/365 days)
 
@@ -26,18 +25,29 @@ class TempestryPattern::Pattern
     pattern = DB2[:conn].execute(sql, TempestryPattern::CLI.zip, TempestryPattern::CLI.year, TempestryPattern::CLI.name, TempestryPattern::CLI.description)
   end
 
-  def self.find_by_name(name)
-    sql = "SELECT * FROM patterns WHERE name = ?"
-    DB2[:conn].execute(sql, name)
-  end
+  def self.new_from_db(row)
+     new_day = self.new
+     new_day.id = row[0]
+     new_day.date = row[1]
+     new_day.location_name = row[2]
+     new_day.weather_station = row[3]
+     new_day.max_temp = row[4]
+     new_day.temp_units = row[5]
+     new_day.color = row[6]
+     new_day.zip = row[7]
+     new_day.year = row[8]
+     new_day.date = row[9]
+     new_day.description = row[10]
+     new_day
+   end
 
-  def self.find_by(attribute={})
-     attribute.each do |key, value|
-     sql = "SELECT * FROM patterns WHERE #{key} = ?"
+   def self.create_pattern
+     pattern = self.find_by_search_terms(TempestryPattern::CLI.zip, TempestryPattern::CLI.year, TempestryPattern::CLI.name, TempestryPattern::CLI.description)
+     pattern.each do |row|
+       self.new_from_db(row)
+     end
      binding.pry
-     return DB2[:conn].execute(sql, value)
-    end
-  end
+   end
 
   def self.preview
     TempestryPattern::Scraper.clear
@@ -74,5 +84,18 @@ end
   # def initialize(options={})
   #   options.each do |property, value|
   #   self.send("#{property}=", value)
+  #   end
+  # end
+
+  # def self.find_by_name(name)
+  #   sql = "SELECT * FROM patterns WHERE name = ?"
+  #   DB2[:conn].execute(sql, name)
+  # end
+
+  # def self.find_by(attribute={})
+  #    attribute.each do |key, value|
+  #    sql = "SELECT * FROM patterns WHERE #{key} = ?"
+  #    binding.pry
+  #    return DB2[:conn].execute(sql, value)
   #   end
   # end

@@ -68,7 +68,7 @@ class TempestryPattern::CLI
     puts ""
     puts "  A. ARCHIVE (save) pattern"
     puts "  V. VIEW all patterns"
-    # puts "  R. RE-PRINT full pattern"
+    puts "  R. RE-PRINT full pattern"
     puts "  S. SEARCH for a new year and zip code"
     puts ""
     puts "Type a letter to make your choice. Type EXIT at any time."
@@ -120,7 +120,7 @@ class TempestryPattern::CLI
           options3
 
         when "R" || "r"
-          TempestryPattern::Pattern.find_by_search_terms(zip, year, name, description)
+          TempestryPattern::Pattern.create_pattern
           options3
 
         when "EXIT" || "exit"
@@ -226,48 +226,3 @@ class TempestryPattern::CLI
     @@all[0].description
   end
 end
-
-#   def self.save
-#     if self.find_by_search_terms(zip, year, name, description) == []
-#       TempestryPattern::Scraper.all.each do |day|
-#         sql = "INSERT INTO patterns (date, location_name, weather_station, max_temp, temp_units, color, zip, year, name, description)
-#           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
-#         DB2[:conn].execute(sql, day.date, day.location_name, day.weather_station, day.max_temp, day.temp_units, day.color, day.zip, day.year, day.name, day.description)
-#         @id = DB2[:conn].execute("SELECT last_insert_rowid() FROM patterns")[0][0]
-#       end
-#     end
-#   end
-#
-#   def self.find_by_search_terms(zip, year, name, description)
-#     sql = "SELECT * FROM patterns WHERE zip = ? AND year = ? AND name = ? AND description = ?"
-#     pattern = DB2[:conn].execute(sql, zip, year, name, description)
-#     puts pattern
-#   end
-# end
-
-# def choose_day
-#   puts ""
-#   puts "Choose a row number to see full daily weather information for that day"
-#   puts ""
-#   input = gets.strip.to_i
-#   ClimatePatternGenerator::Weather.all.each.with_index(1) do |day, i|
-#     if input == i
-#       puts ""
-#       puts "        Here is your daily weather snapshot"
-#       puts ""
-#       puts "        DATE:               #{day.date}"
-#       puts "        LOCATION:           #{day.location_name}"
-#       puts "        WEATHER STATION:    #{day.weather_station}"
-#       puts ""
-#       puts "    MAXIMUM TEMPERATURE:    #{day.max_temp} #{day.temp_units}"
-#       puts "    MINIMUM TEMPERATURE:    #{day.min_temp} #{day.temp_units}"
-#       puts "    MEAN TEMPERATURE:       #{day.mean_temp} #{day.temp_units}"
-#       puts ""
-#       puts ""
-#       puts "    PRECIPITATION:          #{day.precipitation}"
-#       puts ""
-#       puts "        DATA SOURCE:        The Old Farmer's Almanac"
-#       puts "                            https://www.almanac.com/weather/history"
-#       puts ""
-#     end
-#   end
