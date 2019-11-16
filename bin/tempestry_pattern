@@ -6,8 +6,15 @@ require 'sqlite3'
 DB = {:conn => SQLite3::Database.new('./db/colors.db')}
 DB2 = {:conn => SQLite3::Database.new('./db/patterns.db')}
 
-# if TempestryPattern::Color.colors.empty?
+sql = "CREATE TABLE IF NOT EXISTS patterns (id INTEGER PRIMARY KEY, date TEXT, location_name TEXT, weather_station TEXT, max_temp TEXT, temp_units TEXT, color TEXT, zip TEXT, year TEXT, name TEXT, description TEXT);"
+DB2[:conn].execute(sql)
+
 TempestryPattern::Color.all
-# end
 
 TempestryPattern::CLI.new.call
+
+
+
+# def self.drop_table
+#   DB2[:conn].execute("DROP TABLE patterns")
+# end

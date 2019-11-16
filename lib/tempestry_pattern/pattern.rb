@@ -1,51 +1,16 @@
 class TempestryPattern::Pattern
-  attr_accessor :id, :date, :location_name, :weather_station, :max_temp, :temp_units, :color
+  attr_accessor :id, :date, :location_name, :weather_station, :max_temp, :temp_units, :color, :zip, :year, :name, :description
   @@all = []
   @@preview_all = []
 
-  # def self.table_name
-  #    self.to_s.downcase.pluralize
-  # end
-
-  # def self.column_names
-  #   DB2[:conn].results_as_hash = true
-  #
-  #   sql = "pragma table_info('patterns')"
-  #
-  #   table_info = DB2[:conn].execute(sql)
-  #   column_names = []
-  #   table_info.each do |row|
-  #     column_names << row["name"]
-  #   end
-  #   column_names.compact
-  # end
-
-  def initialize(options={})
-    options.each do |property, value|
-    self.send("#{property}=", value)
-    end
-  end
-
-  # def table_name_for_insert
-  #   self.class.table_name
-  # end
-
-  # def col_names_for_insert
-  #   self.class.column_names.delete_if {|col| col == "id"}.join(", ")
-  # end
-
-  # def values_for_insert
-  #   values = []
-  #   self.class.column_names.each do |col_name|
-  #     values << "'#{send(col_name)}'" unless send(col_name).nil?
-  #   end
-  #   values.join(", ")
-  # end
-
   def self.save
-    sql = "INSERT INTO patterns (date, location_name, weather_station, max_temp, temp_units, color) VALUES (?, ?, ?, ?, ?, ?)"
-    DB2[:conn].execute(sql)
-    @id = DB2[:conn].execute("SELECT last_insert_rowid() FROM patterns")[0][0]
+    TempestryPattern::Scraper.all.each do |day|
+      sql = "INSERT INTO patterns (date, location_name, weather_station, max_temp, temp_units, color, zip, year, name, description)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+      DB2[:conn].execute(sql, day.date, day.location_name, day.weather_station, day.max_temp, day.temp_units, day.color, day.zip, day.year, day.name, day.description)
+      @id = DB2[:conn].execute("SELECT last_insert_rowid() FROM patterns")[0][0]
+    end
+    DB2[:conn].execute("SELECT * FROM patterns;")
   end
 
   def self.find_by_name(name)
@@ -90,5 +55,11 @@ class TempestryPattern::Pattern
   def self.preview_all
     @@preview_all
   end
-
 end
+
+
+  # def initialize(options={})
+  #   options.each do |property, value|
+  #   self.send("#{property}=", value)
+  #   end
+  # end

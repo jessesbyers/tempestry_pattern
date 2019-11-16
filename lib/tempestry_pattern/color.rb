@@ -38,3 +38,15 @@ class TempestryPattern::Color
   #     self.new_from_db(row)
   #   end.first
   # end
+
+  # def self.create_table
+  #   sql = <<- SQL
+  #     CREATE TABLE IF NOT EXISTS colors (
+  #       id INTEGER PRIMARY KEY,
+  #       color TEXT,
+  #       min INTEGER,
+  #       MAX INTEGER
+  #     )
+  #   SQL
+  #   DB[:conn].execute(sql)
+  # end

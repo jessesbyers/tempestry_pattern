@@ -66,8 +66,9 @@ class TempestryPattern::CLI
     puts ""
     puts "What would you like to do?"
     puts ""
-    # puts "  V. VIEW detailed daily temperature information"
-    puts "  R. RE-PRINT full pattern"
+    puts "  A. ARCHIVE (save) pattern"
+    puts "  V. VIEW all patterns"
+    # puts "  R. RE-PRINT full pattern"
     puts "  S. SEARCH for a new year and zip code"
     puts ""
     puts "Type a letter to make your choice. Type EXIT at any time."
@@ -110,9 +111,13 @@ class TempestryPattern::CLI
           print_year
           options3
 
-        # when "V" || "v"
-        #   choose_day
+        when "V" || "v"
+        #   add code for listing and choosing patterns from db
         #   options3
+
+        when "A" || "a"
+          TempestryPattern::Pattern.save
+          options3
 
         when "R" || "r"
           print_year

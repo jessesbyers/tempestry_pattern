@@ -41,9 +41,7 @@ class TempestryPattern::Scraper
       self.temp_units = doc.css("table.weatherhistory_results tr.weatherhistory_results_datavalue td p").children[2].text
       self.color = get_color
       convert_temp
-
       @@all << self
-      TempestryPattern::Pattern.save
     end
   end
 
