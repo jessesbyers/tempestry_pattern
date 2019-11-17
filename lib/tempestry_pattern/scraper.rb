@@ -1,12 +1,3 @@
-# Scraper class responsible for
-# #scraping data from website
-# #correcting / converting data
-# #adding corrected data to weather data table in db/patterns.db
-
-# Weather class responsible for
-# #reifying database rows into weather daily objects
-# #includes SQL methods for sorting / displaying data
-
 class TempestryPattern::Scraper
   attr_accessor :zip, :year, :name, :description, :url, :next_day_url, :date, :location_name, :weather_station, :max_temp, :temp_units, :color
   @@all = []
@@ -45,14 +36,6 @@ class TempestryPattern::Scraper
     end
   end
 
-  def self.all
-   @@all
-  end
-
-  def self.clear
-    @@all.clear
-  end
-
   def get_color
     TempestryPattern::Color.all[0].each do |color_row|
       if self.max_temp.to_f.round >= color_row.min && self.max_temp.to_f.round <= color_row.max
@@ -79,4 +62,11 @@ class TempestryPattern::Scraper
     end
   end
 
+  def self.all
+   @@all
+  end
+
+  def self.clear
+    @@all.clear
+  end
 end

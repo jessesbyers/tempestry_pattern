@@ -12,9 +12,3 @@ DB2[:conn].execute(sql)
 TempestryPattern::Color.all
 
 TempestryPattern::CLI.new.call
-
-
-
-# def self.drop_table
-#   DB2[:conn].execute("DROP TABLE patterns")
-# end

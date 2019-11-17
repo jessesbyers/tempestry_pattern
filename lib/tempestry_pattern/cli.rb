@@ -1,14 +1,22 @@
-# revise v option so user can choose pattern and re-print it (see old choose day method)
-
 class TempestryPattern::CLI
   attr_accessor :year, :zip, :name, :description
   @@all = []
 
   def call
     welcome
-    get_search_terms
     options1
     menu_loop
+  end
+
+  def options1
+    puts ""
+    puts "What would you like to do?"
+    puts ""
+    puts "  S. SEARCH for a new year and zip code"
+    puts "  V. VIEW and/or print all patterns"
+    puts ""
+    puts "Type a letter to make your choice. Type EXIT at any time."
+    puts ""
   end
 
   def get_search_terms
@@ -42,36 +50,14 @@ class TempestryPattern::CLI
     @@all << self
   end
 
-  def options1
+  def options
     puts ""
     puts "What would you like to do?"
     puts ""
+    puts "  S. SEARCH for a new year and zip code"
     puts "  P. PREVIEW pattern"
-    puts "  S. SEARCH for a new year and zip code"
-    puts ""
-    puts "Type a letter to make your choice. Type EXIT at any time."
-    puts ""
-  end
-
-  def options2
-    puts ""
-    puts "What would you like to do?"
-    puts ""
-    puts "  C. CREATE and print full pattern"
-    puts "  S. SEARCH for a new year and zip code"
-    puts ""
-    puts "Type a letter to make your choice. Type EXIT at any time."
-    puts ""
-  end
-
-  def options3
-    puts ""
-    puts "What would you like to do?"
-    puts ""
-    # puts "  A. ARCHIVE (save) pattern"
-    puts "  V. VIEW all patterns"
-    puts "  R. RE-PRINT full pattern"
-    puts "  S. SEARCH for a new year and zip code"
+    puts "  C. CREATE and print full pattern (Note: This takes 20 minutes)"
+    puts "  V. VIEW and/or print all patterns"
     puts ""
     puts "Type a letter to make your choice. Type EXIT at any time."
     puts ""
@@ -81,6 +67,7 @@ class TempestryPattern::CLI
     input = nil
     while input != "EXIT" && input != "exit"
       input = gets.strip.upcase
+
       case input
         when "P" || "p"
           puts ""
@@ -97,11 +84,11 @@ class TempestryPattern::CLI
             puts "If this preview looks correct, choose C to create a pattern for the entire year"
             puts ""
           end
-          options2
+          options
 
         when "S" || "s"
           get_search_terms
-          options1
+          options
 
         when "C" || "c"
           puts ""
@@ -112,43 +99,21 @@ class TempestryPattern::CLI
           TempestryPattern::Pattern.year
           TempestryPattern::Pattern.save
           print_year
-          options3
+          options
 
         when "V" || "v"
-          TempestryPattern::Pattern.view_patterns
-          options3
-
-        when "R" || "r"
-          print_year
-          options3
+          view_patterns
+          choose_pattern
+          options
 
         when "EXIT" || "exit"
           goodbye
 
         else
-          options1
+          options
         end
        end
      end
-
-  def welcome
-    puts ""
-    puts "Welcome to the Tempestry Pattern Generator"
-    puts ""
-    puts "The Tempestry Pattern Generator will create a custom knitting or crochet pattern based on the daily maximum temperature for a year."
-    puts "Each yarn color represents a 5-degree range of temperature."
-    puts ""
-  end
-
-  def goodbye
-    puts ""
-    puts "Thank you for using the Tempestry Pattern Generator"
-    puts ""
-  end
-
-  def self.all
-    @@all
-  end
 
   def print_preview
     if TempestryPattern::Scraper.all == nil
@@ -156,12 +121,14 @@ class TempestryPattern::CLI
       puts "  ERROR: Please try again. Weather history data is not available for the date and location you have selected."
       puts ""
       get_search_terms
+
     else
       puts ""
       puts "    Here is your daily maximum temperature data for #{TempestryPattern::Pattern.preview_all[0].location_name}."
       puts ""
       puts "    Complete?  Row #    Date           Max Temperature    Yarn Color"
       puts ""
+
       TempestryPattern::Pattern.preview_all.each.with_index(1) do |day, i|
         if day.max_temp.to_f.round.between?(0, 9)
           temp_spacer = "  "
@@ -170,6 +137,7 @@ class TempestryPattern::CLI
         else
           temp_spacer = ""
         end
+
         puts "    ________   #{i}.       #{day.date}     #{temp_spacer}#{day.max_temp.to_f.round} #{day.temp_units}             #{day.color}"
       end
     end
@@ -183,6 +151,7 @@ class TempestryPattern::CLI
     puts ""
     puts "    Complete?  Row #    Date             Max Temperature    Yarn Color"
     puts ""
+
     TempestryPattern::Pattern.create_pattern.each.with_index(1) do |day, i|
         if i.between?(1, 9)
           row_spacer = "  "
@@ -191,6 +160,7 @@ class TempestryPattern::CLI
         else
           row_spacer = ""
         end
+
         if day.max_temp.to_f.round.between?(0, 9)
           temp_spacer = "  "
         elsif day.max_temp.to_f.round.between?(10, 99) || day.max_temp.to_f.round.between?(-9, -1)
@@ -198,7 +168,67 @@ class TempestryPattern::CLI
         else
           temp_spacer = ""
         end
+
         puts "    ________   #{row_spacer}#{i}.     #{day.date}       #{temp_spacer}#{day.max_temp.to_f.round} #{day.temp_units}             #{day.color}"
+    end
+    puts ""
+  end
+
+  def view_patterns
+    sql = "SELECT DISTINCT zip, year, name, description FROM patterns;"
+    list = DB2[:conn].execute(sql)
+
+      puts "Here is a list of all of the Tempestry Patterns saved in the database"
+      puts ""
+      puts "Number       Zip         Year       Name  and  Description"
+      puts ""
+
+    list.each.with_index(1) do |row, i|
+      if i.between?(1, 9)
+        row_spacer = "  "
+      elsif i.between?(10, 99)
+        row_spacer = " "
+      else
+        row_spacer = ""
+      end
+      puts "#{row_spacer}#{i}.         #{row[0]}       #{row[1]}       #{row[2]}  ---  #{row[3]}"
+    end
+  end
+
+  def choose_pattern
+    puts ""
+    puts "Choose a row number to view or print the pattern"
+    puts ""
+
+    list = DB2[:conn].execute("SELECT DISTINCT zip, year, name, description FROM patterns;")
+    input = gets.strip.to_i
+    sql = "SELECT * FROM patterns WHERE zip = ? AND year = ? AND name = ? AND description = ?"
+    pattern = DB2[:conn].execute(sql, list[input-1][0], list[input-1][1], list[input-1][2], list[input-1][3])
+
+    puts "    Here is your complete knitting pattern for #{pattern[0][2]} --- #{pattern[0][7]} --- #{pattern[0][8]}"
+    puts "    Created by: #{pattern[0][9]}"
+    puts "    Description: #{pattern[0][10]}"
+    puts ""
+    puts "    Complete?  Row #    Date             Max Temperature    Yarn Color"
+    puts ""
+
+    pattern.each.with_index(1) do |day, i|
+        if i.between?(1, 9)
+          row_spacer = "  "
+        elsif i.between?(10, 99)
+          row_spacer = " "
+        else
+          row_spacer = ""
+        end
+        if day[4].to_f.round.between?(0, 9)
+          temp_spacer = "  "
+        elsif day[4].to_f.round.between?(10, 99) || day[4].to_f.round.between?(-9, -1)
+          temp_spacer = " "
+        else
+          temp_spacer = ""
+        end
+
+        puts "    ________   #{row_spacer}#{i}.     #{day[1]}       #{temp_spacer}#{day[4].to_f.round} #{day[5]}             #{day[6]}"
     end
     puts ""
   end
@@ -218,8 +248,23 @@ class TempestryPattern::CLI
   def self.description
     @@all[0].description
   end
-end
 
-# when "A" || "a"
-#   TempestryPattern::Pattern.save
-#   options3
+  def welcome
+    puts ""
+    puts "Welcome to the Tempestry Pattern Generator"
+    puts ""
+    puts "The Tempestry Pattern Generator will create a custom knitting or crochet pattern based on the daily maximum temperature for a year."
+    puts "Each yarn color represents a 5-degree range of temperature."
+    puts ""
+  end
+
+  def goodbye
+    puts ""
+    puts "Thank you for using the Tempestry Pattern Generator"
+    puts ""
+  end
+
+  def self.all
+    @@all
+  end
+end

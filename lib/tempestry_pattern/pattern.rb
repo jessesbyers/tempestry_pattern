@@ -1,6 +1,3 @@
-# formatting for view_patterns methods (use spacers similar to print_year)
-# revise to be full year version (366/365 days)
-
 class TempestryPattern::Pattern
   attr_accessor :id, :date, :location_name, :weather_station, :max_temp, :temp_units, :color, :zip, :year, :name, :description
   @@all = []
@@ -49,15 +46,6 @@ class TempestryPattern::Pattern
      year
    end
 
-   def self.view_patterns
-     sql = "SELECT DISTINCT zip, year, name, description FROM patterns;"
-     list = DB2[:conn].execute(sql)
-       puts "Number.   Zip    Year    Name    Description"
-     list.each.with_index(1) do |row, i|
-       puts "#{i}.    #{row[0]}   #{row[1]}    #{row[2]}    #{row[3]}"
-     end
-   end
-
   def self.preview
     TempestryPattern::Scraper.clear
     @@preview_all.clear
@@ -70,12 +58,14 @@ class TempestryPattern::Pattern
     TempestryPattern::Scraper.clear
     @@all.clear
     if Date.leap?(TempestryPattern::CLI.year.to_i)
-      13.times do
+      13.times do    #366
         @@all << TempestryPattern::Scraper.new
+        # sleep 4
       end
     else
-      12.times do
+      12.times do    #365
         @@all << TempestryPattern::Scraper.new
+        # sleep 4
       end
     end
   end
@@ -87,28 +77,4 @@ class TempestryPattern::Pattern
   def self.preview_all
     @@preview_all
   end
-
-  # def self.pattern
-  #   @@pattern
-  # end
 end
-
-
-  # def initialize(options={})
-  #   options.each do |property, value|
-  #   self.send("#{property}=", value)
-  #   end
-  # end
-
-  # def self.find_by_name(name)
-  #   sql = "SELECT * FROM patterns WHERE name = ?"
-  #   DB2[:conn].execute(sql, name)
-  # end
-
-  # def self.find_by(attribute={})
-  #    attribute.each do |key, value|
-  #    sql = "SELECT * FROM patterns WHERE #{key} = ?"
-  #    binding.pry
-  #    return DB2[:conn].execute(sql, value)
-  #   end
-  # end

@@ -24,29 +24,4 @@ class TempestryPattern::Color
    def self.colors
      @@color_objects
    end
-  end
-
-  # def self.find_by_color(color)
-  #   sql = <<-SQL
-  #     SELECT *
-  #     FROM colors
-  #     WHERE color = ?
-  #     LIMIT 1
-  #   SQL
-  #
-  #   DB[:conn].execute(sql, name).map do |row|
-  #     self.new_from_db(row)
-  #   end.first
-  # end
-
-  # def self.create_table
-  #   sql = <<- SQL
-  #     CREATE TABLE IF NOT EXISTS colors (
-  #       id INTEGER PRIMARY KEY,
-  #       color TEXT,
-  #       min INTEGER,
-  #       MAX INTEGER
-  #     )
-  #   SQL
-  #   DB[:conn].execute(sql)
-  # end
+ end
