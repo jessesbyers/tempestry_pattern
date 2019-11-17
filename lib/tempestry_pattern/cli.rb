@@ -24,6 +24,7 @@ class TempestryPattern::CLI
     puts "SEARCH for daily weather data for a valid U.S. zip code, and a year between 1945 and the current year."
     @@all.clear
     puts ""
+
     puts "Enter a 5-digit zip code"
     self.zip = gets.strip
     if self.zip.size != 5
@@ -33,6 +34,7 @@ class TempestryPattern::CLI
       puts ""
     end
     puts ""
+
     puts "Enter a year"
     self.year = gets.strip
     if self.year.size != 4
@@ -42,9 +44,11 @@ class TempestryPattern::CLI
       puts ""
     end
     puts ""
+
     puts "Enter your name"
     self.name = gets.strip
     puts ""
+
     puts "Enter a project description"
     self.description = gets.strip
     @@all << self
@@ -220,6 +224,7 @@ class TempestryPattern::CLI
         else
           row_spacer = ""
         end
+        
         if day[4].to_f.round.between?(0, 9)
           temp_spacer = "  "
         elsif day[4].to_f.round.between?(10, 99) || day[4].to_f.round.between?(-9, -1)
@@ -227,7 +232,6 @@ class TempestryPattern::CLI
         else
           temp_spacer = ""
         end
-
         puts "    ________   #{row_spacer}#{i}.     #{day[1]}       #{temp_spacer}#{day[4].to_f.round} #{day[5]}             #{day[6]}"
     end
     puts ""

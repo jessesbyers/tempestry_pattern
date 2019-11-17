@@ -58,14 +58,14 @@ class TempestryPattern::Pattern
     TempestryPattern::Scraper.clear
     @@all.clear
     if Date.leap?(TempestryPattern::CLI.year.to_i)
-      13.times do    #366
+      366.times do
         @@all << TempestryPattern::Scraper.new
-        # sleep 4
+        sleep 4
       end
     else
-      12.times do    #365
+      365.times do   
         @@all << TempestryPattern::Scraper.new
-        # sleep 4
+        sleep 4
       end
     end
   end
