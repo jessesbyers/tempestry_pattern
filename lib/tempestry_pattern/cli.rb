@@ -1,3 +1,5 @@
+# revise v option so user can choose pattern and re-print it (see old choose day method)
+
 class TempestryPattern::CLI
   attr_accessor :year, :zip, :name, :description
   @@all = []
@@ -66,7 +68,7 @@ class TempestryPattern::CLI
     puts ""
     puts "What would you like to do?"
     puts ""
-    puts "  A. ARCHIVE (save) pattern"
+    # puts "  A. ARCHIVE (save) pattern"
     puts "  V. VIEW all patterns"
     puts "  R. RE-PRINT full pattern"
     puts "  S. SEARCH for a new year and zip code"
@@ -108,19 +110,16 @@ class TempestryPattern::CLI
           puts "While you are waiting, learn more about the Tempestry Project by watching this video: https://youtu.be/30nG81Fu7yg"
           puts ""
           TempestryPattern::Pattern.year
+          TempestryPattern::Pattern.save
           print_year
           options3
 
         when "V" || "v"
-        #   add code for listing and choosing patterns from db
-        #   options3
-
-        when "A" || "a"
-          TempestryPattern::Pattern.save
+          TempestryPattern::Pattern.view_patterns
           options3
 
         when "R" || "r"
-          TempestryPattern::Pattern.create_pattern
+          print_year
           options3
 
         when "EXIT" || "exit"
@@ -178,18 +177,13 @@ class TempestryPattern::CLI
   end
 
   def print_year
+    TempestryPattern::Pattern.create_pattern
     puts ""
-    puts "    Here is your complete knitting pattern for #{TempestryPattern::Pattern.all[0].location_name}."
+    puts "    Here is your complete knitting pattern for #{TempestryPattern::Pattern.create_pattern[0].location_name}."
     puts ""
     puts "    Complete?  Row #    Date             Max Temperature    Yarn Color"
     puts ""
-    TempestryPattern::Pattern.all.each.with_index(1) do |day, i|
-      if TempestryPattern::Scraper.all == nil
-        puts ""
-        puts "  ERROR: Please try again. Weather history data is not available for the date and location you have selected."
-        puts ""
-        get_search_terms
-      else
+    TempestryPattern::Pattern.create_pattern.each.with_index(1) do |day, i|
         if i.between?(1, 9)
           row_spacer = "  "
         elsif i.between?(10, 99)
@@ -205,7 +199,6 @@ class TempestryPattern::CLI
           temp_spacer = ""
         end
         puts "    ________   #{row_spacer}#{i}.     #{day.date}       #{temp_spacer}#{day.max_temp.to_f.round} #{day.temp_units}             #{day.color}"
-      end
     end
     puts ""
   end
@@ -226,3 +219,7 @@ class TempestryPattern::CLI
     @@all[0].description
   end
 end
+
+# when "A" || "a"
+#   TempestryPattern::Pattern.save
+#   options3

@@ -1,6 +1,5 @@
-# create methods to view data already saved in Database
+# formatting for view_patterns methods (use spacers similar to print_year)
 # revise to be full year version (366/365 days)
-
 
 class TempestryPattern::Pattern
   attr_accessor :id, :date, :location_name, :weather_station, :max_temp, :temp_units, :color, :zip, :year, :name, :description
@@ -36,17 +35,27 @@ class TempestryPattern::Pattern
      new_day.color = row[6]
      new_day.zip = row[7]
      new_day.year = row[8]
-     new_day.date = row[9]
+     new_day.name = row[9]
      new_day.description = row[10]
      new_day
    end
 
    def self.create_pattern
      pattern = self.find_by_search_terms(TempestryPattern::CLI.zip, TempestryPattern::CLI.year, TempestryPattern::CLI.name, TempestryPattern::CLI.description)
-     pattern.each do |row|
-       self.new_from_db(row)
+     year = []
+     pattern.map do |row|
+       year << self.new_from_db(row)
      end
-     binding.pry
+     year
+   end
+
+   def self.view_patterns
+     sql = "SELECT DISTINCT zip, year, name, description FROM patterns;"
+     list = DB2[:conn].execute(sql)
+       puts "Number.   Zip    Year    Name    Description"
+     list.each.with_index(1) do |row, i|
+       puts "#{i}.    #{row[0]}   #{row[1]}    #{row[2]}    #{row[3]}"
+     end
    end
 
   def self.preview
@@ -78,6 +87,10 @@ class TempestryPattern::Pattern
   def self.preview_all
     @@preview_all
   end
+
+  # def self.pattern
+  #   @@pattern
+  # end
 end
 
 
