@@ -1,8 +1,15 @@
 # TempestryPattern
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tempestry_pattern`. To experiment with that code, run `bin/console` for an interactive prompt.
+The Tempestry Pattern Gem was designed to automatically generate patterns for knitting or crocheting climate data.
 
-TODO: Delete this and the text above, and describe your gem
+Users input a zip code and a year, and the program scrapes the daily maximum temperature for each day that year, and converts that temperature to the corresponding color for representing that day in a fiber arts project.
+
+Users can save their patterns with a name and description, and view/print all patterns at a later date.
+
+See The Tempestry Project for examples and more details: https://www.tempestryproject.com
+
+Weather data derived from the National Climatic Data Center, scraped via the Old Farmer's Almanac:
+https://www.almanac.com/weather/history
 
 ## Installation
 
@@ -22,7 +29,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+NOTE: The full version of this gem takes approximately 20 minutes to scrape a full year's worth of weather data.
+
+Use the Demo Version (demo branch) to explore all features of the program with a smaller amount of data. After installation
+
+$ git checkout demo
 
 ## Development
 
