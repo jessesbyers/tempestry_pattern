@@ -208,15 +208,19 @@ class TempestryPattern::CLI
     input = gets.strip.to_i
     sql = "SELECT * FROM patterns WHERE zip = ? AND year = ? AND name = ? AND description = ?"
     pattern = DB2[:conn].execute(sql, list[input-1][0], list[input-1][1], list[input-1][2], list[input-1][3])
+    year = []
+    pattern.map do |row|
+      year << TempestryPattern::Pattern.new_from_db(row)
+    end
 
-    puts "    Here is your complete knitting pattern for #{pattern[0][2]} --- #{pattern[0][7]} --- #{pattern[0][8]}"
-    puts "    Created by: #{pattern[0][9]}"
-    puts "    Description: #{pattern[0][10]}"
+    puts "    Here is your complete knitting pattern for #{year[0].location_name} --- #{year[0].zip} --- #{year[0].year}"
+    puts "    Created by: #{year[0].name}"
+    puts "    Description: #{year[0].description}"
     puts ""
     puts "    Complete?  Row #    Date             Max Temperature    Yarn Color"
     puts ""
 
-    pattern.each.with_index(1) do |day, i|
+    year.each.with_index(1) do |day, i|
         if i.between?(1, 9)
           row_spacer = "  "
         elsif i.between?(10, 99)
@@ -224,15 +228,15 @@ class TempestryPattern::CLI
         else
           row_spacer = ""
         end
-        
-        if day[4].to_f.round.between?(0, 9)
+
+        if day.max_temp.to_f.round.between?(0, 9)
           temp_spacer = "  "
-        elsif day[4].to_f.round.between?(10, 99) || day[4].to_f.round.between?(-9, -1)
+        elsif day.max_temp.to_f.round.between?(10, 99) || day.max_temp.to_f.round.between?(-9, -1)
           temp_spacer = " "
         else
           temp_spacer = ""
         end
-        puts "    ________   #{row_spacer}#{i}.     #{day[1]}       #{temp_spacer}#{day[4].to_f.round} #{day[5]}             #{day[6]}"
+        puts "    ________   #{row_spacer}#{i}.     #{day.date}       #{temp_spacer}#{day.max_temp.to_f.round} #{day.temp_units}             #{day.color}"
     end
     puts ""
   end
